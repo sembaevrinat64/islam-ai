@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Ответ ИИ</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f4f3; padding: 20px; display: flex; justify-content: center; }
+        .result-box { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); max-width: 800px; width: 100%; }
+        h2 { color: #2c7a7b; border-bottom: 2px solid #2c7a7b; padding-bottom: 10px; }
+        .content { line-height: 1.6; font-size: 18px; color: #333; margin-top: 20px; }
+        .back-link { display: inline-block; margin-top: 20px; color: #2c7a7b; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="result-box">
+        <h2>Вопрос: {{ question }}</h2>
+        <div class="content">
+            {{ content|safe }}
+        </div>
+        <a href="/" class="back-link">← Задать другой вопрос</a>
+    </div>
+</body>
+</html>

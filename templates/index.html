@@ -1,0 +1,198 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Исламский Справочник ИИ</title>
+    <style>
+        /* Переменные для легкого переключения тем */
+        :root {
+            --bg-color: #f0f4f3;
+            --header-bg: #2c7a7b;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #718096;
+            --input-border: #e2e8f0;
+            --shadow: rgba(0,0,0,0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a202c;
+            --header-bg: #1d4e4f;
+            --card-bg: #2d3748;
+            --text-main: #f7fafc;
+            --text-muted: #a0aec0;
+            --input-border: #4a5568;
+            --shadow: rgba(0,0,0,0.3);
+        }
+
+        body { 
+            background: var(--bg-color); 
+            color: var(--text-main);
+            font-family: 'Segoe UI', sans-serif; 
+            margin: 0;
+            transition: background 0.3s, color 0.3s;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Шапка */
+        .header {
+            background: var(--header-bg);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        /* Кнопка Темы */
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid white;
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.4);
+        }
+
+        /* Контейнер */
+        .container {
+            max-width: 600px;
+            width: 90%;
+            margin: -40px auto 40px;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px var(--shadow);
+            text-align: center;
+        }
+
+        input[type="text"] { 
+            width: 100%; 
+            padding: 15px; 
+            font-size: 18px; 
+            border: 2px solid var(--input-border); 
+            background: var(--card-bg);
+            color: var(--text-main);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        button.submit-btn {
+            background: #2c7a7b;
+            color: white;
+            padding: 15px 40px;
+            border-radius: 30px;
+            border: none;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.3s;
+        }
+
+        button.submit-btn:hover {
+            background: #1d4e4f;
+            transform: translateY(-2px);
+        }
+
+        /* Анимация загрузки */
+        #loader {
+            display: none;
+            margin: 25px auto 10px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #2c7a7b;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        #waitText {
+            display: none;
+            color: #2c7a7b;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .footer {
+            margin-top: auto;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+        <h1>🌙 Исламский Справочник</h1>
+        <p>Ваш персональный помощник по вопросам религии</p>
+    </div>
+
+    <div class="container">
+        <form action="/ask" method="POST" onsubmit="return startLoading()">
+<input type="text" name="question" id="qInput" placeholder="Введите ваш вопрос..." required>
+            <button type="submit" class="submit-btn" id="sBtn">Спросить ИИ</button>
+            
+            <div id="loader"></div>
+            <p id="waitText">Нейросеть анализирует ваш вопрос...<br>Обычно это занимает 15-30 секунд.</p>
+        </form>
+    </div>
+
+    <div class="footer">
+        © 2026 Разработано с помощью Python & AI
+    </div>
+
+    <script>
+        // Функция загрузки
+        function startLoading() {
+            if (document.getElementById('qInput').value.trim() === "") return false;
+            
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('waitText').style.display = 'block';
+            const btn = document.getElementById('sBtn');
+            btn.disabled = true;
+            btn.innerText = "Ищем ответ...";
+            return true;
+        }
+
+        // Функция переключения темы
+        function toggleTheme() {
+            const html = document.documentElement;
+            const btn = document.getElementById('themeBtn');
+            
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.removeAttribute('data-theme');
+                btn.innerText = '🌙';
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                btn.innerText = '☀️';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Проверка сохраненной темы
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('themeBtn').innerText = '☀️';
+        }
+    </script>
+</body>
+</html>

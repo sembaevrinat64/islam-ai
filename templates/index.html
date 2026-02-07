@@ -1,197 +1,405 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Исламский Справочник ИИ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
     <style>
-        /* Переменные для легкого переключения тем */
         :root {
-            --bg-color: #f0f4f3;
-            --header-bg: #2c7a7b;
-            --card-bg: #ffffff;
-            --text-main: #333333;
-            --text-muted: #718096;
-            --input-border: #e2e8f0;
-            --shadow: rgba(0,0,0,0.1);
+            /* Светлая тема */
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --primary-color: #0d9488; /* Глубокий бирюзовый */
+            --primary-hover: #0f766e;
+            --text-main: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius: 16px;
         }
 
         [data-theme="dark"] {
-            --bg-color: #1a202c;
-            --header-bg: #1d4e4f;
-            --card-bg: #2d3748;
-            --text-main: #f7fafc;
-            --text-muted: #a0aec0;
-            --input-border: #4a5568;
-            --shadow: rgba(0,0,0,0.3);
+            /* Темная тема */
+            --bg-color: #0f172a;
+            --surface-color: #1e293b;
+            --primary-color: #2dd4bf; /* Более яркий бирюзовый для темной темы */
+            --primary-hover: #14b8a6;
+            --text-main: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --shadow-sm: none;
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            box-sizing: border-box;
+            outline: none;
         }
 
         body { 
             background: var(--bg-color); 
             color: var(--text-main);
-            font-family: 'Segoe UI', sans-serif; 
+            font-family: 'Inter', sans-serif; 
             margin: 0;
-            transition: background 0.3s, color 0.3s;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            transition: background 0.3s ease, color 0.3s ease;
+            line-height: 1.6;
         }
 
-        /* Шапка */
+        /* --- Шапка --- */
         .header {
-            background: var(--header-bg);
-            color: white;
-            padding: 60px 20px;
-            text-align: center;
-            position: relative;
+            padding: 20px;
+            display: flex;
+            justify-content: flex-end; /* Кнопка темы справа */
+            align-items: center;
         }
 
-        /* Кнопка Темы */
         .theme-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255,255,255,0.2);
-            border: 1px solid white;
-            color: white;
-            padding: 10px;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 18px;
-            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: 0.2s ease;
+            box-shadow: var(--shadow-sm);
         }
 
         .theme-toggle:hover {
-            background: rgba(255,255,255,0.4);
+            transform: scale(1.05);
+            box-shadow: var(--shadow-md);
         }
 
-        /* Контейнер */
-        .container {
-            max-width: 600px;
-            width: 90%;
-            margin: -40px auto 40px;
-            background: var(--card-bg);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px var(--shadow);
+        /* --- Основной контейнер --- */
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* Центрируем по вертикали */
+            padding: 20px;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .logo-area {
             text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease-out;
         }
 
-        input[type="text"] { 
-            width: 100%; 
-            padding: 15px; 
-            font-size: 18px; 
-            border: 2px solid var(--input-border); 
-            background: var(--card-bg);
-            color: var(--text-main);
-            border-radius: 12px;
-            margin-bottom: 20px;
-            box-sizing: border-box;
-            outline: none;
+        .logo-area h1 {
+            font-size: 2.5rem;
+            margin: 0 0 10px 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
         }
 
-        button.submit-btn {
-            background: #2c7a7b;
-            color: white;
-            padding: 15px 40px;
-            border-radius: 30px;
+        .logo-area p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        /* --- Поле поиска (Современный стиль) --- */
+        .search-box {
+            width: 100%;
+            position: relative;
+            margin-bottom: 30px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .input-wrapper {
+            position: relative;
+            width: 100%;
+            background: var(--surface-color);
+            border-radius: 50px; /* Полное скругление */
+        box-shadow: var(--shadow-lg);
+            transition: box-shadow 0.3s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .input-wrapper:focus-within {
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.2), var(--shadow-lg);
+            transform: translateY(-2px);
+            border-color: var(--primary-color);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 20px 60px 20px 30px; /* Справа отступ под микрофон */
+            font-size: 1.1rem;
             border: none;
-            font-size: 18px;
-            font-weight: bold;
+            background: transparent;
+            color: var(--text-main);
+            border-radius: 50px;
+        }
+        
+        input[type="text"]::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.7;
+        }
+
+        /* Кнопка микрофона внутри поля */
+        .voice-btn {
+            position: absolute;
+            right: 15px;
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            transition: 0.2s;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .voice-btn:hover {
+            background: rgba(0,0,0,0.05);
+            color: var(--primary-color);
+        }
+        
+        .voice-listening {
+            color: #ef4444 !important; /* Красный */
+            animation: pulse-red 1.5s infinite;
+        }
+
+        @keyframes pulse-red {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        /* Кнопка отправки */
+        .submit-btn {
+            background: var(--primary-color);
+            color: #ffffff; /* Всегда белый текст на кнопке */
+            padding: 16px 32px;
+            border-radius: 12px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
             width: 100%;
-            transition: 0.3s;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
-        button.submit-btn:hover {
-            background: #1d4e4f;
+        .submit-btn:hover {
+            background: var(--primary-hover);
             transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
         }
 
-        /* Анимация загрузки */
+        /* --- Стили для текста ответа (На будущее) --- */
+        /* Это применится к тексту, который вернет сервер */
+        .ai-answer {
+            background: var(--surface-color);
+            padding: 30px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            width: 100%;
+            text-align: left;
+            margin-top: 30px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .ai-answer h2, .ai-answer h3 { color: var(--primary-color); margin-top: 0; }
+        .ai-answer p { margin-bottom: 1rem; }
+        .ai-answer ul { padding-left: 20px; }
+        .ai-answer li { margin-bottom: 8px; }
+        .ai-answer blockquote { 
+            border-left: 4px solid var(--primary-color);
+            margin: 0;
+            padding-left: 15px;
+            font-style: italic;
+            background: rgba(0,0,0,0.02);
+            padding: 10px 15px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* --- Анимации загрузки --- */
         #loader {
             display: none;
-            margin: 25px auto 10px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #2c7a7b;
+            margin: 20px auto;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0,0,0,0.1);
+            border-left-color: var(--primary-color);
             border-radius: 50%;
-            width: 45px;
-            height: 45px;
             animation: spin 1s linear infinite;
         }
-
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        [data-theme="dark"] #loader {
+             border: 4px solid rgba(255,255,255,0.1);
+             border-left-color: var(--primary-color);
+        }
 
         #waitText {
             display: none;
-            color: #2c7a7b;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
             margin-top: 10px;
-            font-size: 0.9rem;
+            font-weight: 500;
         }
 
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
         .footer {
-            margin-top: auto;
             padding: 20px;
             text-align: center;
-            color: var(--text-muted);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
         }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
-        <h1>🌙 Исламский Справочник</h1>
-        <p>Ваш персональный помощник по вопросам религии</p>
-    </div>
+    <header class="header">
+        <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" aria-label="Переключить тему">🌙</button>
+    </header>
 
-    <div class="container">
-        <form action="/ask" method="POST" onsubmit="return startLoading()">
-<input type="text" name="question" id="qInput" placeholder="Введите ваш вопрос..." required>
-            <button type="submit" class="submit-btn" id="sBtn">Спросить ИИ</button>
+    <main class="main-container">
+        
+        <div class="logo-area">
+            <h1>Исламский Справочник</h1>
+            <p>Искусственный интеллект на основе Корана и Сунны</p>
+        </div>
+
+        <form action="/ask" method="POST" onsubmit="return startLoading()" class="search-box">
             
-            <div id="loader"></div>
-            <p id="waitText">Нейросеть анализирует ваш вопрос...<br>Обычно это занимает 15-30 секунд.</p>
-        </form>
-    </div>
+            <div class="input-wrapper">
+                <input type="text" id="searchInput" name="question" placeholder="Задайте вопрос (например: Как совершать намаз?)..." required autocomplete="off">
+                <button type="button" id="voiceBtn" class="voice-btn" title="Голосовой ввод">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                        <line x1="12" y1="19" x2="12" y2="23"></line>
+                        <line x1="8" y1="23" x2="16" y2="23"></line>
+                    </svg>
+                </button>
+            </div>
+            
+            <p id="voiceStatus" style="display:none; color: var(--primary-color); font-size: 0.9rem; margin-top: 8px; font-weight: 500;">Слушаю...</p>
 
-    <div class="footer">
-        © 2026 Разработано с помощью Python & AI
-    </div>
+            <div style="margin-top: 25px;">
+                <button type="submit" class="submit-btn">Найти ответ</button>
+            </div>
+
+        </form>
+
+        <div id="loader"></div>
+        <p id="waitText">ИИ анализирует источники...</p>
+
+        </main>
+
+    <footer class="footer">
+        &copy; 2024 Исламский Справочник AI
+    </footer>
 
     <script>
-        // Функция загрузки
-        function startLoading() {
-            if (document.getElementById('qInput').value.trim() === "") return false;
-            
-            document.getElementById('loader').style.display = 'block';
-            document.getElementById('waitText').style.display = 'block';
-            const btn = document.getElementById('sBtn');
-            btn.disabled = true;
-            btn.innerText = "Ищем ответ...";
-            return true;
-        }
-
-        // Функция переключения темы
+        // --- Логика Темы ---
         function toggleTheme() {
-            const html = document.documentElement;
+            const body = document.body;
             const btn = document.getElementById('themeBtn');
+            const isDark = body.getAttribute('data-theme') === 'dark';
             
-            if (html.getAttribute('data-theme') === 'dark') {
-                html.removeAttribute('data-theme');
-                btn.innerText = '🌙';
+            if (isDark) {
+                body.removeAttribute('data-theme');
+                btn.textContent = '🌙';
                 localStorage.setItem('theme', 'light');
             } else {
-                html.setAttribute('data-theme', 'dark');
-                btn.innerText = '☀️';
+                body.setAttribute('data-theme', 'dark');
+                btn.textContent = '☀️';
                 localStorage.setItem('theme', 'dark');
             }
         }
 
-        // Проверка сохраненной темы
         if (localStorage.getItem('theme') === 'dark') {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            document.getElementById('themeBtn').innerText = '☀️';
+            document.body.setAttribute('data-theme', 'dark');
+            document.getElementById('themeBtn').textContent = '☀️';
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            // Авто-определение темы системы
+            document.body.setAttribute('data-theme', 'dark');
+            document.getElementById('themeBtn').textContent = '☀️';
+        }
+
+        // --- Логика Загрузки ---
+        function startLoading() {
+            document.querySelector('.search-box').style.display = 'none'; // Скрываем поиск
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('waitText').style.display = 'block';
+            return true;
+        }
+
+        // --- Голосовой ввод ---
+        const searchInput = document.getElementById('searchInput');
+        const voiceBtn = document.
+            getElementById('voiceBtn');
+        const voiceStatus = document.getElementById('voiceStatus');
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+        if (SpeechRecognition) {
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'ru-RU'; 
+            recognition.continuous = false;
+
+            voiceBtn.addEventListener('click', () => {
+                if (voiceBtn.classList.contains('voice-listening')) {
+                    recognition.stop();
+                } else {
+                    recognition.start();
+                }
+            });
+
+            recognition.onstart = () => {
+                voiceBtn.classList.add('voice-listening');
+                voiceStatus.style.display = 'block';
+                searchInput.placeholder = "Говорите...";
+            };
+
+            recognition.onend = () => {
+                voiceBtn.classList.remove('voice-listening');
+                voiceStatus.style.display = 'none';
+                searchInput.placeholder = "Задайте вопрос...";
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                searchInput.value = transcript;
+                // Авто-отправка через 1 секунду после ввода голосом (опционально)
+                // setTimeout(() => document.querySelector('form').submit(), 1000);
+            };
+
+            recognition.onerror = (event) => {
+                console.error(event.error);
+                voiceBtn.classList.remove('voice-listening');
+                voiceStatus.innerText = "Не удалось распознать";
+            };
+        } else {
+            voiceBtn.style.display = 'none';
         }
     </script>
 </body>
